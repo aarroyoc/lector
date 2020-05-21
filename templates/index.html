@@ -12,7 +12,7 @@
         <main>
             <ol>
                 {% for item in items %}
-                <li><a href="{{ item.url }}">{{ item.title }} ({{ item.source }})</a><small>{{ item.readable_date }}</small></li>
+                <li>{{ item.source }} &#187; <a href="{{ item.url }}">{{ item.title }}</a><small>{{ item.readable_date }}</small></li>
                 {% endfor %}
             </ol>
         </main>

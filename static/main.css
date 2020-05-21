@@ -17,3 +17,7 @@ main{
 	max-width: 75vw;
 	background-color: azure;
 }
+
+li{
+	margin: 10px;
+}

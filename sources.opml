@@ -54,7 +54,7 @@
         <!-- <outline type="rss" text="Barrapunto" title="Barrapunto" xmlUrl="http://barrapunto.com/index.rss" htmlUrl="http://barrapunto.com/"/> -->
         <outline type="rss" text="CULTURIZATECH" title="CULTURIZATECH" xmlUrl="http://deboratumanzana.blogspot.com/feeds/posts/default" htmlUrl="http://culturatechrk.blogspot.com/"/>
         <outline type="rss" text="Monday Note - Medium" title="Monday Note - Medium" xmlUrl="http://feeds.feedburner.com/monday-note" htmlUrl="https://mondaynote.com?source=rss----c537d80ed0a---4"/>
-        <outline type="rss" text="Latest Cheat Sheets from Cheatography" title="Latest Cheat Sheets from Cheatography" xmlUrl="http://www.cheatography.com/explore/new/rss/" htmlUrl="http://www.cheatography.com/explore/new/"/>
+        <!-- <outline type="rss" text="Latest Cheat Sheets from Cheatography" title="Latest Cheat Sheets from Cheatography" xmlUrl="http://www.cheatography.com/explore/new/rss/" htmlUrl="http://www.cheatography.com/explore/new/"/> -->
         <outline type="rss" text="URL MultiShortener" title="URL MultiShortener" xmlUrl="http://multishortener.blogspot.com/feeds/posts/default" htmlUrl="http://multishortener.blogspot.com/"/>
         <outline type="rss" text="Genbeta" title="Genbeta" xmlUrl="http://www.genbeta.com/atom.xml" htmlUrl="https://www.genbeta.com"/>
         <!-- <outline type="rss" text="Mundo Geek" title="Mundo Geek" xmlUrl="http://mundogeek.net/feed/" htmlUrl="http://mundogeek.net"/> -->

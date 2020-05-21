@@ -92,13 +92,13 @@ def main():
 
     print(f"OK: {output_folder}")
 
-    # s3 = boto3.client("s3")
-    # transfer = S3Transfer(s3)
-    # for path in output_folder.iterdir():
-    #     transfer.upload_file(str(path), "lector.adrianistan.eu", path.name, extra_args={
-    #         "ACL": "public-read",
-    #         "ContentType": mimetypes.guess_type(path.name)[0]
-    #     })
+    s3 = boto3.client("s3")
+    transfer = S3Transfer(s3)
+    for path in output_folder.iterdir():
+        transfer.upload_file(str(path), "lector.adrianistan.eu", path.name, extra_args={
+            "ACL": "public-read",
+            "ContentType": mimetypes.guess_type(path.name)[0]
+        })
 
 if __name__ == "__main__":
     main()
