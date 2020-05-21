@@ -3,10 +3,6 @@ provider "aws" {
   version = "2.60.0"
 }
 
-provider "archive" {
-  version = "1.3"
-}
-
 resource "aws_s3_bucket" "lector-www" {
     bucket = "lector.adrianistan.eu"
     acl = "public-read"
@@ -16,7 +12,7 @@ resource "aws_s3_bucket" "lector-www" {
     }
 }
 
-output "website_url" {
+output "website_cname" {
     value = aws_s3_bucket.lector-www.website_endpoint
 }
 
@@ -29,8 +25,8 @@ resource "aws_lambda_function" "lector" {
     source_code_hash = filebase64sha256("function.zip")
     runtime = "python3.8"
 
-    memory_size      = 128
-    timeout = 3
+    memory_size = 256
+    timeout = 900
 }
 
 resource "aws_iam_role" "lector" {

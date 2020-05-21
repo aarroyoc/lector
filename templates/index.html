@@ -3,13 +3,21 @@
     <head>
         <meta charset="utf-8">
         <title>Lector</title>
+        <link rel="stylesheet" href="main.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
         <h1>Lector</h1>
-        <ul>
-            {% for item in items %}
-            <li><a href="{{ item.url }}">{{ item.title }}</a></li>
-            {% endfor %}
-        </ul>
+        <p>Un agregador de blogs de tecnología sin añadidos. Enlaces en inglés y en español.</p>
+        <main>
+            <ol>
+                {% for item in items %}
+                <li><a href="{{ item.url }}">{{ item.title }} ({{ item.source }})</a><small>{{ item.readable_date }}</small></li>
+                {% endfor %}
+            </ol>
+        </main>
+        <footer>
+            <p>¿Quiéres que tu blog aparezca en Lector? <a target="_blank" href="https://blog.adrianistan.eu/contacto">Contacta conmigo</a></p>
+        </footer>
     </body>
 </html>
