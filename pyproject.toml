@@ -10,6 +10,7 @@ python = "^3.8"
 feedparser = "^5.2.1"
 jinja2 = "^2.11.2"
 boto3 = "^1.13.14"
+aiohttp = "^3.6.2"
 
 [tool.poetry.dev-dependencies]
 

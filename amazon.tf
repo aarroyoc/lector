@@ -3,12 +3,35 @@ provider "aws" {
   version = "2.60.0"
 }
 
+resource "aws_resourcegroups_group" "lector" {
+  name = "lector"
+  resource_query {
+    query = <<JSON
+{
+  "ResourceTypeFilters": [
+    "AWS::AllSupported"
+  ],
+  "TagFilters": [
+    {
+      "Key": "app",
+      "Values": ["lector"]
+    }
+  ]
+}
+JSON
+  }
+}
+
 resource "aws_s3_bucket" "lector-www" {
     bucket = "lector.adrianistan.eu"
     acl = "public-read"
 
     website {
         index_document = "index.html"
+    }
+
+    tags = {
+      app = "lector"
     }
 }
 
@@ -27,10 +50,18 @@ resource "aws_lambda_function" "lector" {
 
     memory_size = 256
     timeout = 900
+
+    tags = {
+      app = "lector"
+    }
 }
 
 resource "aws_iam_role" "lector" {
   name = "lector"
+
+  tags = {
+    app = "lector"
+  }
 
   assume_role_policy = <<EOF
 {
@@ -63,11 +94,32 @@ resource "aws_cloudwatch_event_rule" "lector-daily" {
     name = "lector-daily"
     description = "Run Lector Lambda every day"
 
-    schedule_expression = "rate(24 hours)"
+    schedule_expression = "cron(45 8 * * ? *)"
+
+    tags = {
+      app = "lector"
+    }
 }
 
 resource "aws_cloudwatch_event_target" "lector-daily" {
     rule = aws_cloudwatch_event_rule.lector-daily.name
     target_id = "lector-daily"
     arn = aws_lambda_function.lector.arn
+}
+
+resource "aws_cloudwatch_log_group" "lector" {
+  name              = "/aws/lambda/${aws_lambda_function.lector.function_name}"
+  retention_in_days = 7
+
+  tags = {
+    app = "lector"
+  }
+}
+
+resource "aws_lambda_permission" "cloudwatch-call-lector" {
+    statement_id = "AllowExecutionFromCloudWatch"
+    action = "lambda:InvokeFunction"
+    function_name = aws_lambda_function.lector.function_name
+    principal = "events.amazonaws.com"
+    source_arn = aws_cloudwatch_event_rule.lector-daily.arn
 }

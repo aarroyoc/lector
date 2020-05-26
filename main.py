@@ -1,8 +1,10 @@
+import aiohttp
 import feedparser
 import boto3
 from boto3.s3.transfer import S3Transfer
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
+import asyncio
 import itertools
 import xml.etree.ElementTree as ET
 import logging
@@ -14,7 +16,10 @@ from datetime import datetime
 from dataclasses import dataclass
 from pathlib import Path
 
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.INFO)
+
+# Sequential 2:50
+# Aiohttp: 1.17
 
 @dataclass
 class Item:
@@ -48,27 +53,39 @@ def fetch_items(feed, source):
     all_items = filter(lambda x: x is not None, all_items)
     return filter(lambda x: x.is_in_last_month(), all_items)
 
-def fetch_source(outline):
-    source = outline.get("title")
-    feed_url = outline.get("xmlUrl")
-    feed = feedparser.parse(feed_url)
+def parse_source(feed_text, source):
+    feed = feedparser.parse(feed_text)
     if feed.bozo == 0 or type(feed.bozo_exception) != urllib.error.URLError:
-        logging.info(f"Downloaded {feed_url} with success")
         return fetch_items(feed, source)
     else:
-        logging.error(f"Feed '{feed_url}' is not available")
+        logging.error(f"Feed '{source}' is not available")
         return []
 
 def handler(event, context):
-    main()
+    asyncio.run(main())
 
-def main():
+async def main():
     tree = ET.parse("sources.opml")
     body = tree.find("body")
 
-    items = map(fetch_source, body.iter("outline"))
-    items = itertools.chain(*items)
-    items = list(items)
+    sources = [ outline.get("title") for outline in body.iter("outline")]
+    feeds_url = [ outline.get("xmlUrl") for outline in body.iter("outline")]
+
+    items = list()
+
+    async with aiohttp.ClientSession() as session:
+        feeds = map(session.get, feeds_url)
+        for feed_task in asyncio.as_completed(feeds):
+            try:
+                feed = await feed_task
+                url = str(feed.url)
+                logging.info(f"Downloaded {url} with success")
+                feed_text = await feed.text()
+                i = feeds_url.index(url)
+                source = sources[i]
+                items.extend(parse_source(feed_text, source))
+            except:
+                pass
 
     env = Environment(
             loader=FileSystemLoader("templates"),
@@ -101,4 +118,4 @@ def main():
         })
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

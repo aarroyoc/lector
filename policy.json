@@ -18,6 +18,13 @@
         "Effect": "Allow",
         "Action": "s3:*",
         "Resource": "*"
-    }
+      },
+      {
+        "Action": [
+          "logs:*"
+        ],
+        "Effect": "Allow",
+        "Resource": "*"
+      }
   ]
 }
