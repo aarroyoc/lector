@@ -39,7 +39,7 @@ class Item:
     @staticmethod
     def from_feeditem(item, source):
         try:
-            pdate = item["published_parsed"]
+            pdate = item.get("published_parsed", item.get("updated_parsed"))
             published_date = datetime(year=pdate.tm_year, month=pdate.tm_mon, day=pdate.tm_mday)
             return Item(item["title"], item["link"], published_date, source)
         except:
@@ -74,7 +74,7 @@ async def main():
     items = list()
 
     async with aiohttp.ClientSession() as session:
-        feeds = map(session.get, feeds_url)
+        feeds = [session.get(url) for url in feeds_url]
         for feed_task in asyncio.as_completed(feeds):
             try:
                 feed = await feed_task
